@@ -1,0 +1,101 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}  % Paquete para márgenes
+
+
+\begin{document}
+
+\section*{Ejercicio 1: Modelo básico}
+
+\[
+\parbox{\textwidth}{En primer lugar, con el objetivo de minimizar los costos de distribución relacionados con la apertura de centrales para abastecer a las oficinas y las distancias de conexión, se planteó el siguiente modelo básico.}
+\]
+
+\subsection*{Conjuntos:}
+\[
+C = \left\{ 1, 2, \ldots, 10 \right\} = \text{Conjunto de centrales operativas extraído de "centrales.txt"}
+\]
+\[
+O =\left\{ 1, 2, \ldots, 56 \right\} = \text{Conjunto de oficinas extraído de "oficinas.txt"}
+\]
+
+\vspace{0.5cm}
+
+
+\subsection*{Variables:}
+\[
+x_{ij} = 
+\begin{cases} 
+1 & \text{si la oficina } i \text{ está conectada a la central } j \\
+0 & \text{en otro caso}
+\end{cases}
+\]
+
+\vspace{0.5cm}
+
+\[
+y_j = 
+\begin{cases} 
+1 & \text{si la central } j \text{ está abierta} \\
+0 & \text{en otro caso}
+\end{cases}
+\]
+
+\subsection*{Función objetivo:}
+
+Minimizar:
+\[
+ \sum_{j \in C} \text{costo\_central} \cdot y_j + \sum_{i \in O}\sum_{j \in C} \text{d}_{ij} \cdot \text{costo\_cable} \cdot x_{ij}
+\]
+
+\[
+\parbox{\textwidth}{Siendo que el costo de abrir una central de operaciones es de 5700 y que el costo de 1 metro de cable es de 17/1000, la función objetivo en efecto es la siguiente:}
+\]
+
+\[
+ \sum_{j \in C} \text{5700} \cdot y_j + \sum_{i \in O}\sum_{j \in C} \text{d}_{ij} \cdot \text{17/1000} \cdot x_{ij}
+\]
+
+\subsection*{Restricciones:}
+
+\begin{itemize}
+    \item \text{Cada oficina debe estar conectada a una única central operativa:}
+    \[
+    \sum_{j \in C} x_{ij} = 1     \hspace{1cm} \forall i \in O
+    \]
+    
+    \vspace{0.3cm}
+    
+    \item \text{Si una oficina está asignada a una central, esa central debe estar abierta:}
+    \[
+    x_{ij} \leq y_j  \hspace{1cm}\forall i \in O, \forall j \in C
+    \]
+    
+    \vspace{0.3cm}
+
+    \item\parbox{\textwidth}{La suma de las demandas de las oficinas conectadas a una central no debe exceder la capacidad máxima (\(M = 15000\)):}
+    \[
+   \sum_{i \in O} x_{ij} \cdot \text{demanda}_i \leq M \hspace{1cm} \forall j \in C
+    \]
+\end{itemize}
+
+\section*{Ejercicio 2: Restricción adicional}
+\[
+\parbox{\textwidth}{Se puede agregar una restricción adicional al modelo para que en la solución se considere que una central no pueda atender a más de 10 oficinas, como una manera de hacer las distribuciones más equitativas y no permitir la sobrecarga de una central particular más allá de que pueda cumplir con las restricciones de demanda.}
+\]
+
+
+\begin{itemize}
+    \item \text{Cada central no puede atender a más de 10 oficinas:}
+    \[
+   \sum_{i \in O} x_{ij} \leq 10 \hspace{1cm}\forall j \in C
+    \]
+\end{itemize}
+
+\section*{Ejercicio 3: Parámetro adicional}
+
+\[
+\text{capacidad\_mínima} = \frac{\sum_{i \in O} \text{demanda}_i}{10}
+\]
+
+\end{document}
