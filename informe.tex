@@ -2,31 +2,27 @@
 \usepackage{amsmath}
 \usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}  % Paquete para márgenes
 
-
 \begin{document}
 
 \section*{Ejercicio 1: Modelo básico}
 
-\[
-\parbox{\textwidth}{En primer lugar, con el objetivo de minimizar los costos de distribución relacionados con la apertura de centrales para abastecer a las oficinas y las distancias de conexión, se planteó el siguiente modelo básico.}
-\]
+En primer lugar, con el objetivo de minimizar los costos de distribución relacionados con la apertura de centrales para abastecer a las oficinas y las distancias de conexión, se planteó el siguiente modelo básico.
 
 \subsection*{Conjuntos:}
 \[
 C = \left\{ 1, 2, \ldots, 10 \right\} = \text{Conjunto de centrales operativas extraído de "centrales.txt"}
 \]
 \[
-O =\left\{ 1, 2, \ldots, 56 \right\} = \text{Conjunto de oficinas extraído de "oficinas.txt"}
+O = \left\{ 1, 2, \ldots, 56 \right\} = \text{Conjunto de oficinas extraído de "oficinas.txt"}
 \]
 
 \vspace{0.5cm}
-
 
 \subsection*{Variables:}
 \[
 x_{ij} = 
 \begin{cases} 
-1 & \text{si la oficina } i \text{ está conectada a la central } j \\
+1 & \text{si la oficina } i \text{ está conectada a la central } j \\ 
 0 & \text{en otro caso}
 \end{cases}
 \]
@@ -36,7 +32,7 @@ x_{ij} =
 \[
 y_j = 
 \begin{cases} 
-1 & \text{si la central } j \text{ está abierta} \\
+1 & \text{si la central } j \text{ está abierta} \\ 
 0 & \text{en otro caso}
 \end{cases}
 \]
@@ -45,39 +41,52 @@ y_j =
 
 Minimizar:
 \[
- \sum_{j \in C} \text{costo\_central} \cdot y_j + \sum_{i \in O}\sum_{j \in C} \text{d}_{ij} \cdot \text{costo\_cable} \cdot x_{ij}
+\sum_{j \in C} \text{costo\_apertura} \cdot y_j + \sum_{i \in O} \sum_{j \in C} \text{d}_{ij} \cdot \text{costo\_cable} \cdot x_{ij}
 \]
 
-\[
-\parbox{\textwidth}{Siendo que el costo de abrir una central de operaciones es de 5700 y que el costo de 1 metro de cable es de 17/1000, la función objetivo en efecto es la siguiente:}
-\]
+Siendo que el costo de abrir una central de operaciones es de 5700 y que el costo de 1 metro de cable es de \(17/1000\), la función objetivo es:
 
 \[
- \sum_{j \in C} \text{5700} \cdot y_j + \sum_{i \in O}\sum_{j \in C} \text{d}_{ij} \cdot \text{17/1000} \cdot x_{ij}
+\sum_{j \in C} 5700 \cdot y_j + \sum_{i \in O} \sum_{j \in C} \text{d}_{ij} \cdot \frac{17}{1000} \cdot x_{ij}
 \]
 
 \subsection*{Restricciones:}
 
 \begin{itemize}
-    \item \text{Cada oficina debe estar conectada a una única central operativa:}
+    \item Cada oficina debe estar conectada a una única central operativa:
     \[
-    \sum_{j \in C} x_{ij} = 1     \hspace{1cm} \forall i \in O
+    \sum_{j \in C} x_{ij} = 1 \quad \forall i \in O
     \]
     
-    \vspace{0.3cm}
-    
-    \item \text{Si una oficina está asignada a una central, esa central debe estar abierta:}
+    \item Si una oficina está asignada a una central, esa central debe estar abierta:
     \[
-    x_{ij} \leq y_j  \hspace{1cm}\forall i \in O, \forall j \in C
+    x_{ij} \leq y_j \quad \forall i \in O, \forall j \in C
     \]
-    
-    \vspace{0.3cm}
 
-    \item\parbox{\textwidth}{La suma de las demandas de las oficinas conectadas a una central no debe exceder la capacidad máxima (\(M = 15000\)):}
+    \item La suma de las demandas de las oficinas conectadas a una central no debe exceder la capacidad máxima (\(M = 15000\)):
     \[
-   \sum_{i \in O} x_{ij} \cdot \text{demanda}_i \leq M \hspace{1cm} \forall j \in C
+    \sum_{i \in O} x_{ij} \cdot \text{operaciones}_i \leq M \quad \forall j \in C
     \]
 \end{itemize}
+
+\subsection*{Resultados:}
+
+Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dicho mínimo se alcanzó en 9 segundos por el solver y asigna las oficinas a las centrales de la siguiente manera:
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item\text{Centrales abiertas:} 1, 2, 3, 5, 7, 9.
+	\begin{itemize}
+	\item Oficinas asignadas a la central 1: 15, 46, 47, 48, 49, 50, 51, 52, 53, 54
+	\item Oficinas asignadas a la central 2: 1, 2, 3, 14, 16, 29, 30, 42, 43, 44
+	\item Oficinas asignadas a la central 3: 10, 11, 18, 19, 21, 31, 32, 33
+	\item Oficinas asignadas a la central 5: 8, 9, 17, 20, 34, 35, 36, 37, 40, 41
+	\item Oficinas asignadas a la central 7: 4, 5, 6, 7, 26, 28, 38, 45, 55, 56
+	\item Oficinas asignadas a la central 9: 12, 13, 22, 23, 24, 25, 27, 39
+	\end{itemize}
+\end{itemize}
+
+
 
 \section*{Ejercicio 2: Restricción adicional}
 \[
@@ -91,6 +100,13 @@ Minimizar:
    \sum_{i \in O} x_{ij} \leq 10 \hspace{1cm}\forall j \in C
     \]
 \end{itemize}
+\subsection*{Resultados con restricción adicional:}
+\[
+\parbox{\textwidth}{Teniendo en cuenta esta nueva restricción, el óptimo encontrado no cambia. Fijándonos en el óptimo con el modelo sin esta restricción adicional, a ninguna central se le asignan más de 10 oficinas, por lo que esta restricción no afecta al óptimo. Si se pusiera una menor cantidad de oficinas máximas a las que puede abastecer una central, ya nos encontraríamos con otro caso distinto.}
+\]
+\[
+\parbox{\textwidth}{Igualmente, agregando esta restricción se nota una pequeña mejora en el tiempo de ejecución del solver, pasando de tardar 8 segundos en encontrar la solución óptima a tardar 7 segundos. Si bien no parece muy significante, con mayores instancias o cambios en los datasets, esta restricción podría ser de ayuda para la reducción de tiempo de ejecución.}
+\]
 
 \section*{Ejercicio 3: Parámetro adicional}
 
