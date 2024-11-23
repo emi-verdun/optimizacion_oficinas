@@ -8,7 +8,7 @@ set C := {read "centrales.txt" as "<1s>"};    #Conjunto de Centrales
 param a := 5700;   #Costo de apertura central operativa -> USD5700
 param m := 0.017;  #Costo por 1000m de cable -> USD17
 param h := 15000;   #Capacidad maxima de operaciones por hora que procesa una central
-param M := 52;      #Máximo de oficinas
+param M := 56;      #Máximo de oficinas
 
 param op[O]:= read "oficinas.txt" as "<1s> 2n";        #Operaciones por hora de la oficina i
 param d[O*C] := read "distancias.txt" as "n+";    #Distancia entre oficina i y central j 
