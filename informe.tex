@@ -63,9 +63,9 @@ Siendo que el costo de abrir una central de operaciones es de 5700 y que el cost
     x_{ij} \leq y_j \quad \forall i \in O, \forall j \in C
     \]
 
-    \item La suma de las demandas de las oficinas conectadas a una central no debe exceder la capacidad máxima (\(M = 15000\)):
+    \item La suma de las operaciones por hora de las oficinas conectadas a una central no debe exceder la capacidad máxima H (\(H = 15000\)):
     \[
-    \sum_{i \in O} x_{ij} \cdot \text{operaciones}_i \leq M \quad \forall j \in C
+    \sum_{i \in O} x_{ij} \cdot \text{operaciones}_i \leq H \quad \forall j \in C
     \]
 \end{itemize}
 
@@ -113,5 +113,16 @@ Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dic
 \[
 \text{capacidad\_mínima} = \frac{\sum_{i \in O} \text{demanda}_i}{10}
 \]
+
+
+\section*{Ejercicio 4: Experimentación con Instancias}
+Para la experimentación del modelo y ver su factibilidad, fueron planteadas diferentes instancias de prueba.
+
+\subsection*{56 oficinas, 6 centrales:}
+Reduciendo la cantidad de centrales que pueden abrirse a las primeras 6, el solver tiene una ejecución casi instantánea, con un tiempo marcado de 0.0 y con 8 soluciones posibles exploradas. El óptimo alcanzado utiliza las 6 centrales y cuesta 34666.837, lo cual es un poco peor que el óptimo encontrado con las instancias originales. Con la solución óptima encontrada, ninguna central abastece a más de 10 oficinas.
+
+\subsection*{100 oficinas, 20 centrales:}
+Tomando una matriz de distancias de 100x20, ya resulta imposible encontrar el modelo por fallas en la alocación de memoria para poder resolver el modelo.
+
 
 \end{document}
