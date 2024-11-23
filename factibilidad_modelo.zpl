@@ -13,8 +13,6 @@ set C := {read "centrales.txt" as "<1s>"};    #Conjunto de Centrales
 
 
 #Parametros
-param M := 56;      #Máximo de oficinas, variable usada para ligar
-
 param op[O]:= read "oficinas.txt" as "<1s> 2n";      #Operaciones por hora de la oficina i
 param d[O*C] := read "distancias.txt" as "n+";       #Distancia entre oficina i y central j 
 
@@ -37,5 +35,5 @@ subto oficina_conectada: forall <i> in O:       #Cada oficina debe estar abastec
 subto operaciones: forall <j> in C:            #Capacidad máxima de operaciones por hora que procesa una central
 	sum <i> in O: x[i,j] * op[i] <= h;
 
-subto centrales_usadas: forall <j> in C:       #Forzar c[j] = 1 cuando la central j abastece a alguna oficina
-	sum <i> in O: x[i,j] <= c[j] * M; 
+subto centrales_usadas: forall <i,j> in O*C:       #Forzar y[j] = 1 cuando la central j abastece a alguna oficina
+	sum <i> in O: x[i,j] <= y[j]; 
