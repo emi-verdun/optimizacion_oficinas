@@ -116,13 +116,21 @@ Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dic
 
 
 \section*{Ejercicio 4: Experimentación con Instancias}
-Para la experimentación del modelo y ver su factibilidad, fueron planteadas diferentes instancias de prueba.
+Para la experimentación del modelo y ver su factibilidad, fueron planteadas diferentes instancias de prueba. 
 
 \subsection*{56 oficinas, 6 centrales:}
 Reduciendo la cantidad de centrales que pueden abrirse a las primeras 6, el solver tiene una ejecución casi instantánea, con un tiempo marcado de 0.0 y con 8 soluciones posibles exploradas. El óptimo alcanzado utiliza las 6 centrales y cuesta 34666.837, lo cual es un poco peor que el óptimo encontrado con las instancias originales. Con la solución óptima encontrada, ninguna central abastece a más de 10 oficinas.
 
 \subsection*{100 oficinas, 20 centrales:}
-Tomando una matriz de distancias de 100x20, ya resulta imposible encontrar el modelo por fallas en la alocación de memoria para poder resolver el modelo.
+Tomando una matriz de distancias de 100x20, ya comienza a complicarse la resolución en un tiempo razonable del modelo utilizando el planteo básico. Fue establecido un límite de tiempo de 1 hora y no se encontró un óptimo, sino que el modelo se cortó con un mínimo encontrado de 57351.305.
+
+Resulta interesante ver que utilizando el modelo con la restricción adicional de un máximo de 10 oficinas por central, se llegó rápidamente a un óptimo de 57352.41. En solo 10 segundos se llegó a eso, aunque se puede ver que tiene un costo mayor que la resolución utilizando el modelo básico a pesar de que este no llegó al óptimo.
+
+\subsection*{1000 oficinas, 200 centrales:}
+Con esta instancia y estos números tan grandes ya la implementación de los modelos toma mucho tiempo y al momento de corte pasada 1 hora se ve cómo el costo mínimo encontrado se dispara a comparación de las otras instancias, con una solución no óptima cuyo costo es de 1040683.412.
+
+
+
 
 
 \end{document}
