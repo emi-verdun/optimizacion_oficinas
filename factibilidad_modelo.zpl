@@ -20,12 +20,12 @@ param d[O*C] := read "distancias.txt" as "n+";       #Distancia entre oficina i 
 #Variables
 var c[C] binary;     #Si se abre la central j, c[j] = 1
 var x[O*C] binary;   #Si la central operativa j abastece a la oficina i 
-var h >= 0;          #Capacidad maxima de operaciones por hora que procesa una central, no puede ser negativo
+var H >= 0;          #Capacidad maxima de operaciones por hora que procesa una central, no puede ser negativo
 
 
 
 #Objetivo
-minimize horas: h;                                  
+minimize horas: H;                                  
 
 
 #Restricciones
@@ -33,7 +33,7 @@ subto oficina_conectada: forall <i> in O:       #Cada oficina debe estar abastec
 	sum <j> in C: x[i,j] == 1;
 
 subto operaciones: forall <j> in C:            #Capacidad máxima de operaciones por hora que procesa una central
-	sum <i> in O: x[i,j] * op[i] <= h;
+	sum <i> in O: x[i,j] * op[i] <= H;
 
 subto centrales_usadas: forall <i,j> in O*C:       #Forzar y[j] = 1 cuando la central j abastece a alguna oficina
 	sum <i> in O: x[i,j] <= y[j]; 
