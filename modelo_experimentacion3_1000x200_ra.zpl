@@ -1,7 +1,7 @@
 #EXPERIMENTACION CON 100 OFICINAS Y 20 CENTRALES
 #Conjuntos
-set O := {read "experimentacion2_oficinas.txt" as "<1s>"};     #Conjunto de Oficinas
-set C := {read "experimentacion2_centrales.txt" as "<1s>"};    #Conjunto de Centrales
+set O := {read "experimentacion3_oficinas.txt" as "<1s>"};     #Conjunto de Oficinas
+set C := {read "experimentacion3_centrales.txt" as "<1s>"};    #Conjunto de Centrales
 
 
 #Parametros
@@ -9,8 +9,8 @@ param costo_apertura := 5700;    #Costo de apertura central operativa -> USD5700
 param costo_cable := 0.017;   #Costo por 1000m de cable -> USD17
 param H := 15000;   #Capacidad maxima de operaciones por hora que procesa una central
 
-param op[O]:= read "experimentacion2_oficinas.txt" as "<1s> 2n";      #Operaciones por hora de la oficina i
-param d[O*C] := read "experimentacion2_distancias.txt" as "n+";       #Distancia entre oficina i y central j 
+param op[O]:= read "experimentacion3_oficinas.txt" as "<1s> 2n";      #Operaciones por hora de la oficina i
+param d[O*C] := read "experimentacion3_distancias.txt" as "n+";       #Distancia entre oficina i y central j 
 
 
 #Variables
@@ -34,3 +34,7 @@ subto operaciones: forall <j> in C:            #Capacidad máxima de operaciones
 
 subto centrales_usadas: forall <i,j> in O*C:       #Forzar y[j] = 1 cuando la central j abastece a alguna oficina
 	sum <i> in O: x[i,j] <= y[j]; 
+
+#Restriccion Extra
+subto cant_oficinas_por_central: forall <j> in C:
+    sum <i> in O: x[i,j] <= 10;

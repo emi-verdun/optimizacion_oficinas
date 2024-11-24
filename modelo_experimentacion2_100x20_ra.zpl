@@ -34,3 +34,7 @@ subto operaciones: forall <j> in C:            #Capacidad máxima de operaciones
 
 subto centrales_usadas: forall <i,j> in O*C:       #Forzar y[j] = 1 cuando la central j abastece a alguna oficina
 	sum <i> in O: x[i,j] <= y[j]; 
+
+#Restriccion Extra
+subto cant_oficinas_por_central: forall <j> in C:
+    sum <i> in O: x[i,j] <= 10;
