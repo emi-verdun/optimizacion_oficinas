@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{amssymb} % Para símbolos matemáticos adicionales
 \usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}  % Paquete para márgenes
 
 \begin{document}
@@ -110,9 +111,22 @@ Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dic
 
 \section*{Ejercicio 3: Parámetro adicional}
 
+Para analizar la factibilidad del modelo con respecto a la capacidad máxima de operaciones por hora de cada central modificamos el modelo básico inicial para encontrar el mínimo valor para el cual el problema es factible. 
+Antes de armar este modelo notamos que para que el modelo pueda ser factible necesitamos que se cumpla:
+
 \[
-\text{capacidad\_mínima} = \frac{\sum_{i \in O} \text{demanda}_i}{10}
+H \cdot \lvert \text{C} \rvert \geq \sum_{i \in O} \text{operaciones}_i \tag{1} 
 \]
+
+Para la instancia en particular dada, además, también se necesita lo siguiente:
+% Segunda ecuación
+\[
+H \cdot 10 \geq 88000
+\]
+
+Sabemos que si no se cumple esto el modelo no va a ser factible. Aún así si se cumple hay chances de que no sea factible, dado que tenemos la restricción de que cada oficina solo puede estar abastecida por una central. Si no tuviéramos esa restricción y una central pudiera abastecer parcialmente a una oficina, cumplir una fracción de la demanda de esa oficina, en ese caso podríamos estar seguros de que si se cumple (1) el modelo es factible. Como no estamos en ese caso propusimos un modelo para encontrar este mínimo.
+
+El modelo propuesto tiene únicamente 2 cambios. Primero se define H (Capacidad maxima de operaciones por hora que procesa una central) como una variable, la cual debe ser mayor o igual que 0. Y luego se modifica la función objetivo para minimizar H, se ignora totalmente el costo de abrir una central y de conectar las oficinas a las centrales que las abastecen ya que no influye en la factibilidad del modelo. Así al correrlo nos da el mínimo de la capacidad máxima de operaciones por hora de cada central para el cuál se cumplen las restricciones, es decir, el mínimo para el cuál el modelo sigue siendo factible. En esta instancia ese mínimo fue de 8800 horas. Se cumple la ecuación por igualdad ya que \( H \cdot \lvert \text{Centrales} \rvert \) nos da exactamente la sumatoria de la demanda de operaciones de cada oficina.
 
 
 \section*{Ejercicio 4: Experimentación con Instancias}
