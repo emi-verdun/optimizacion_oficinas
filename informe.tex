@@ -5,6 +5,10 @@
 
 \begin{document}
 
+\section*{Introducción}
+
+Se presentó un problema de optimización en el área de planificación de una empresa de cobros minoristas, donde tenemos centrales operativas y oficinas de atención que deben ser abastecidas por las primeras, cumpliendo ciertas restricciones. En este trabajo se planteará un modelo de programación lineal entera para este problema utilizando zimpl como lenguaje de modelado y SCIP como solver. Dentro de la entrega se incluyeron distintos modelos para las distintas cuestiones planteadas en la consigna, instancias adicionales usadas en experimentación y las soluciones dadas por SCIP para cada uno de los modelos en formato txt.
+
 \section*{Ejercicio 1: Modelo básico}
 
 En primer lugar, con el objetivo de minimizar los costos de distribución relacionados con la apertura de centrales para abastecer a las oficinas y las distancias de conexión, se planteó el siguiente modelo básico.
@@ -70,6 +74,8 @@ Siendo que el costo de abrir una central de operaciones es de 5700 y que el cost
     \]
 \end{itemize}
 
+Este modelo inicial fue implementado en el archivo "modelo.zpl", trasladando este modelo al lenguaje zimpl, con las modificaciones que esto implica.
+
 \subsection*{Resultados:}
 
 Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dicho mínimo se alcanzó en 9 segundos por el solver y asigna las oficinas a las centrales de la siguiente manera:
@@ -101,6 +107,9 @@ Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dic
    \sum_{i \in O} x_{ij} \leq 10 \hspace{1cm}\forall j \in C
     \]
 \end{itemize}
+
+Dicho modelo con la restricción adicional se implementó en el archivo "modelo_modificado.zpl"
+
 \subsection*{Resultados con restricción adicional:}
 \[
 \parbox{\textwidth}{Teniendo en cuenta esta nueva restricción, el óptimo encontrado no cambia. Fijándonos en el óptimo con el modelo sin esta restricción adicional, a ninguna central se le asignan más de 10 oficinas, por lo que esta restricción no afecta al óptimo. Si se pusiera una menor cantidad de oficinas máximas a las que puede abastecer una central, ya nos encontraríamos con otro caso distinto.}
@@ -109,7 +118,7 @@ Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dic
 \parbox{\textwidth}{Igualmente, agregando esta restricción se nota una pequeña mejora en el tiempo de ejecución del solver, pasando de tardar 8 segundos en encontrar la solución óptima a tardar 7 segundos. Si bien no parece muy significante, con mayores instancias o cambios en los datasets, esta restricción podría ser de ayuda para la reducción de tiempo de ejecución.}
 \]
 
-\section*{Ejercicio 3: Parámetro adicional}
+\section*{Ejercicio 3: Factibilidad Modelo}
 
 Para analizar la factibilidad del modelo con respecto a la capacidad máxima de operaciones por hora de cada central modificamos el modelo básico inicial para encontrar el mínimo valor para el cual el problema es factible. 
 Antes de armar este modelo notamos que para que el modelo pueda ser factible necesitamos que se cumpla:
@@ -118,7 +127,7 @@ Antes de armar este modelo notamos que para que el modelo pueda ser factible nec
 H \cdot \lvert \text{C} \rvert \geq \sum_{i \in O} \text{operaciones}_i \tag{1} 
 \]
 
-Para la instancia en particular dada, además, también se necesita lo siguiente:
+Para la instancia dada:
 % Segunda ecuación
 \[
 H \cdot 10 \geq 88000
@@ -126,11 +135,28 @@ H \cdot 10 \geq 88000
 
 Sabemos que si no se cumple esto el modelo no va a ser factible. Aún así si se cumple hay chances de que no sea factible, dado que tenemos la restricción de que cada oficina solo puede estar abastecida por una central. Si no tuviéramos esa restricción y una central pudiera abastecer parcialmente a una oficina, cumplir una fracción de la demanda de esa oficina, en ese caso podríamos estar seguros de que si se cumple (1) el modelo es factible. Como no estamos en ese caso propusimos un modelo para encontrar este mínimo.
 
-El modelo propuesto tiene únicamente 2 cambios. Primero se define H (Capacidad maxima de operaciones por hora que procesa una central) como una variable, la cual debe ser mayor o igual que 0. Y luego se modifica la función objetivo para minimizar H, se ignora totalmente el costo de abrir una central y de conectar las oficinas a las centrales que las abastecen ya que no influye en la factibilidad del modelo. Así al correrlo nos da el mínimo de la capacidad máxima de operaciones por hora de cada central para el cuál se cumplen las restricciones, es decir, el mínimo para el cuál el modelo sigue siendo factible. En esta instancia ese mínimo fue de 8800 horas. Se cumple la ecuación por igualdad ya que \( H \cdot \lvert \text{Centrales} \rvert \) nos da exactamente la sumatoria de la demanda de operaciones de cada oficina.
+El modelo propuesto, implementado en "factibilidad_modelo.zpl", tiene únicamente 2 cambios. Primero se define H (Capacidad maxima de operaciones por hora que procesa una central) como una variable, la cual debe ser mayor o igual que 0. Y luego se modifica la función objetivo para minimizar H, se ignora totalmente el costo de abrir una central y de conectar las oficinas a las centrales que las abastecen ya que no influye en la factibilidad del modelo. Así al correrlo nos da el mínimo de la capacidad máxima de operaciones por hora de cada central para el cuál se cumplen las restricciones, es decir, el mínimo para el cuál el modelo sigue siendo factible. En esta instancia ese mínimo fue de 8800 horas. Se cumple la ecuación por igualdad ya que \( H \cdot \lvert \text{Centrales} \rvert \) nos da exactamente la sumatoria de la demanda de operaciones de cada oficina.
 
+Además, también se analizó la factibilidad del modelo con la restricción adicional. En ese caso para que el modelo pueda ser factible se debe complir (1) y la siguiente restricción:
+
+\[
+\frac{\lvert \text{O} \rvert}{\lvert \text{C} \rvert}  <= T
+\]
+
+Para la instancia dada:
+% Segunda ecuación
+\[
+\frac{\lvert \text{56} \rvert}{\lvert \text{10} \rvert}  <= T
+\]
+
+\[
+5.6 <= T
+\]
+
+Definiendo T como el máximo de oficinas que puede abastecer una central. Se vio que al minimizar el modelo propuesto para analizar la factibilidad en el modelo inicial pero agregando la restricción adicional, el valor mínimo de H no cambió, fue también de 8800. Esto no resulta sorprendente ya que como vimos en los puntos anteriores, el valor óptimo era el mismo en el modelo inicial y el modelo modificado, por lo que la restricción no añadía cortes importantes al modelo en la instancia dada. Pero al plantear un modelo que minimizara H y T, implementado en "factibilidad_modelo_modificado.zpl", se vió que a pesar de que el valor mínimo de H siguiera siendo 8800, T, que en modelo modificado estaba fijado en 10, bajó a 6. Esto resultó interesante, ya que H se mantuvo, se pensó que tal vez el modelo da prioridad a minimizar H porque es un valor más grande que T, podría resultar interesante asignarle un peso para darle más importancia a una variable o a otra. 
 
 \section*{Ejercicio 4: Experimentación con Instancias}
-Para la experimentación del modelo y ver su factibilidad, fueron planteadas diferentes instancias de prueba. 
+Para la experimentación del modelo y ver su factibilidad, fueron planteadas diferentes instancias de prueba. Se incluyó en la entrega 9 archivos con las instancias generadas para la experimentación, 3 para cada experimentación, uno con las distancias, uno con las oficinas y otro con las centrales.
 
 \subsection*{56 oficinas, 6 centrales:}
 Reduciendo la cantidad de centrales que pueden abrirse a las primeras 6, el solver tiene una ejecución casi instantánea, con un tiempo marcado de 0.0 y con 8 soluciones posibles exploradas. El óptimo alcanzado utiliza las 6 centrales y cuesta 34666.837, lo cual es un poco peor que el óptimo encontrado con las instancias originales. Con la solución óptima encontrada, ninguna central abastece a más de 10 oficinas.
