@@ -1,9 +1,30 @@
 \documentclass{article}
 \usepackage{amsmath}
-\usepackage{amssymb} % Para símbolos matemáticos adicionales
-\usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}  % Paquete para márgenes
+\usepackage{amssymb}
+\usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry} 
+
 
 \begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge \textbf{Trabajo Práctico 2}}\\[1cm]
+    {\Large \textbf{Optimización}}\\
+    {\Large Aplicaciones Computacionales en Negocios}\\[0.5cm]
+    
+    \vspace{2cm}
+    \textbf{\large Integrantes:}\\[0.5cm]
+    {\large
+    Victor Navajas\\
+    Emiliana Verdun\\
+    Elizabeth Wurzel \\
+    Mariana Zunino \\
+    }
+    
+    \vfill
+    \end{titlepage}
 
 \section*{Introducción}
 
@@ -35,7 +56,7 @@ x_{ij} =
 \vspace{0.5cm}
 
 \[
-y_j = 
+y_{j}= 
 \begin{cases} 
 1 & \text{si la central } j \text{ está abierta} \\ 
 0 & \text{en otro caso}
@@ -108,7 +129,7 @@ Con el modelo básico planteado, se encontró un costo mínimo de 34549.843. Dic
     \]
 \end{itemize}
 
-Dicho modelo con la restricción adicional se implementó en el archivo "modelo_modificado.zpl"
+Dicho modelo con la restricción adicional se implementó en el archivo "modelomodificado.zpl"
 
 \subsection*{Resultados con restricción adicional:}
 \[
@@ -127,33 +148,32 @@ Antes de armar este modelo notamos que para que el modelo pueda ser factible nec
 H \cdot \lvert \text{C} \rvert \geq \sum_{i \in O} \text{operaciones}_i \tag{1} 
 \]
 
-Para la instancia dada:
-% Segunda ecuación
+Para la instancia dada: 
 \[
 H \cdot 10 \geq 88000
 \]
 
 Sabemos que si no se cumple esto el modelo no va a ser factible. Aún así si se cumple hay chances de que no sea factible, dado que tenemos la restricción de que cada oficina solo puede estar abastecida por una central. Si no tuviéramos esa restricción y una central pudiera abastecer parcialmente a una oficina, cumplir una fracción de la demanda de esa oficina, en ese caso podríamos estar seguros de que si se cumple (1) el modelo es factible. Como no estamos en ese caso propusimos un modelo para encontrar este mínimo.
 
-El modelo propuesto, implementado en "factibilidad_modelo.zpl", tiene únicamente 2 cambios. Primero se define H (Capacidad maxima de operaciones por hora que procesa una central) como una variable, la cual debe ser mayor o igual que 0. Y luego se modifica la función objetivo para minimizar H, se ignora totalmente el costo de abrir una central y de conectar las oficinas a las centrales que las abastecen ya que no influye en la factibilidad del modelo. Así al correrlo nos da el mínimo de la capacidad máxima de operaciones por hora de cada central para el cuál se cumplen las restricciones, es decir, el mínimo para el cuál el modelo sigue siendo factible. En esta instancia ese mínimo fue de 8800 horas. Se cumple la ecuación por igualdad ya que \( H \cdot \lvert \text{Centrales} \rvert \) nos da exactamente la sumatoria de la demanda de operaciones de cada oficina.
+El modelo propuesto, implementado en "factibilidadmodelo.zpl", tiene únicamente 2 cambios. Primero se define H (Capacidad maxima de operaciones por hora que procesa una central) como una variable, la cual debe ser mayor o igual que 0. Y luego se modifica la función objetivo para minimizar H, se ignora totalmente el costo de abrir una central y de conectar las oficinas a las centrales que las abastecen ya que no influye en la factibilidad del modelo. Así al correrlo nos da el mínimo de la capacidad máxima de operaciones por hora de cada central para el cuál se cumplen las restricciones, es decir, el mínimo para el cuál el modelo sigue siendo factible. En esta instancia ese mínimo fue de 8800 horas. Se cumple la ecuación por igualdad ya que \( H \cdot \lvert \text{Centrales} \rvert \) nos da exactamente la sumatoria de la demanda de operaciones de cada oficina.
 
 Además, también se analizó la factibilidad del modelo con la restricción adicional. En ese caso para que el modelo pueda ser factible se debe complir (1) y la siguiente restricción:
 
 \[
-\frac{\lvert \text{O} \rvert}{\lvert \text{C} \rvert}  <= T
+\frac{\lvert \text{O} \rvert}{\lvert \text{C} \rvert} \leq T
 \]
 
 Para la instancia dada:
 % Segunda ecuación
 \[
-\frac{\lvert \text{56} \rvert}{\lvert \text{10} \rvert}  <= T
+\frac{\lvert \text{56} \rvert}{\lvert \text{10} \rvert}  \leq T
 \]
 
 \[
-5.6 <= T
+5.6 \leq T
 \]
 
-Definiendo T como el máximo de oficinas que puede abastecer una central. Se vio que al minimizar el modelo propuesto para analizar la factibilidad en el modelo inicial pero agregando la restricción adicional, el valor mínimo de H no cambió, fue también de 8800. Esto no resulta sorprendente ya que como vimos en los puntos anteriores, el valor óptimo era el mismo en el modelo inicial y el modelo modificado, por lo que la restricción no añadía cortes importantes al modelo en la instancia dada. Pero al plantear un modelo que minimizara H y T, implementado en "factibilidad_modelo_modificado.zpl", se vió que a pesar de que el valor mínimo de H siguiera siendo 8800, T, que en modelo modificado estaba fijado en 10, bajó a 6. Esto resultó interesante, ya que H se mantuvo, se pensó que tal vez el modelo da prioridad a minimizar H porque es un valor más grande que T, podría resultar interesante asignarle un peso para darle más importancia a una variable o a otra. 
+Definiendo T como el máximo de oficinas que puede abastecer una central. Se vio que al minimizar el modelo propuesto para analizar la factibilidad en el modelo inicial pero agregando la restricción adicional, el valor mínimo de H no cambió, fue también de 8800. Esto no resulta sorprendente ya que como vimos en los puntos anteriores, el valor óptimo era el mismo en el modelo inicial y el modelo modificado, por lo que la restricción no añadía cortes importantes al modelo en la instancia dada. Pero al plantear un modelo que minimizara H y T, implementado en "factibilidadmodelomodificado.zpl", se vió que a pesar de que el valor mínimo de H siguiera siendo 8800, T, que en modelo modificado estaba fijado en 10, bajó a 6. Esto resultó interesante, ya que H se mantuvo, se pensó que tal vez el modelo da prioridad a minimizar H porque es un valor más grande que T, podría resultar interesante asignarle un peso para darle más importancia a una variable o a otra. 
 
 \section*{Ejercicio 4: Experimentación con Instancias}
 Para la experimentación del modelo y ver su factibilidad, fueron planteadas diferentes instancias de prueba. Se incluyó en la entrega 9 archivos con las instancias generadas para la experimentación, 3 para cada experimentación, uno con las distancias, uno con las oficinas y otro con las centrales.
@@ -171,6 +191,7 @@ Con esta instancia y estos números tan grandes ya la implementación de los mod
 
 Se incrementó el tiempo de ejecución máximo a 5 horas para ver si se llegaba a encontrar un óptimo, pero no resultó posible. La gran cantidad de oficinas y centrales dificulta ya el hallazgo de un óptimo en tiempo razonable.
 
-
+\section*{Conclusión}
+En definitiva, fueron explorados en este trabajo diferentes planteos para el modelo de abastecimiento de oficinas a partir de centrales, viendo la importancia de los tamaños de instancias y las restricciones de los modelos para encontrar una solución factible en un tiempo razonable. A mayor tamaño de instancias es natural que cueste más tiempo encontrar un óptimo, pero es posible a través de restricciones adicionales encontrar un óptimo en menor tiempo.
 
 \end{document}
